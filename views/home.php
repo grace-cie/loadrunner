@@ -30,7 +30,7 @@ $row = $user->details($sql);
             
         </div>
         <div class="container-fluid d-flex">
-            <img src="./img/logo.png" style="height: 41px;" alt="">
+            <img src="../img/logo.png" style="height: 41px;" alt="">
             <span class="navbar-brand mb-0 h1 position-absolute" style="left: 65px;">Web Tours</span>
         </div>
     </nav>
@@ -47,7 +47,7 @@ $row = $user->details($sql);
 		    ?>
     <nav class="navbar" style="background: #e9e2ec; width: 244px; position: absolute; height: 100%;">
         <div class="form position-absolute" style="top: 87px; left: 13px;">
-            <a class="btn btn-default mt-2" style="border: 1px solid; width: 90px; height: 30px;">Flights</a>
+            <a href="./flights.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px; height: 30px;">Flights</a>
             <br>
             <a class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Itenerary</a>
             <br>
@@ -61,7 +61,7 @@ $row = $user->details($sql);
     <div class="container" style="position: absolute;width: 1100px;background: #e9e2ec;height: 100%;right: 1px;">
         <div class="message" style="margin-top: 226px;margin-left: 108px;color: #21294b;">
             <h5 style="color: #222; width: 800px;">
-                Welcome to the Web tours site.
+                Welcome <strong><?php echo $row['fname'] ?></strong>, to the Web tours site.
                 To make reservation, please enter your account information to the left.
                 If you haven't registered yet, <strong>sign up now</strong> to get access to all our resources.
                 To configure the server options, use <strong>administration</strong> link.

@@ -4,7 +4,7 @@
  
 	//redirect if logged in
 	if(isset($_SESSION['user'])){
-		header('location:home.php');
+		header('./home.php');
 	}
 ?>
 
@@ -24,7 +24,7 @@
             
         </div>
         <div class="container-fluid d-flex">
-            <img src="./img/logo.png" style="height: 41px;" alt="">
+            <img src="../img/logo.PNG" style="height: 41px;" alt="">
             <span class="navbar-brand mb-0 h1 position-absolute" style="left: 65px;">Web Tours</span>
         </div>
     </nav>
@@ -41,7 +41,7 @@
 		    ?>
     <nav class="navbar" style="background: #e9e2ec; width: 244px; position: absolute; height: 100%;">
         <div class="form position-absolute" style="top: 87px; left: 13px;">
-            <form method="POST" action="../controller/login_controller.php">
+            <form method="POST" action="./controller/login_controller.php">
                 <label for="user">Username</label>
                 <input class="" name="username" type="text" placeholder="username" required>
                 <label for="pass">Password</label>

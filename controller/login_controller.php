@@ -1,5 +1,6 @@
 <?php
 //start session
+
 session_start();
  
 include_once('./user_controller.php');
@@ -14,11 +15,11 @@ if(isset($_POST['login'])){
  
 	if(!$auth){
 		$_SESSION['message'] = 'Invalid username or password';
-    	header('location:../views/index.php');
+    		header('location:../index.php');
 	}
 	else{
 		$_SESSION['user'] = $auth;
-        $_SESSION['message'] = 'Welcome';
+        	$_SESSION['message'] = 'Welcome';
 		header('location:../views/home.php');
 	}
 }
