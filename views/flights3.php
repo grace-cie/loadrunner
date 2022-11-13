@@ -11,5 +11,5 @@ if(isset($_POST['stepthree'])){
      $form2 = $flights->escape_string($_POST['optradio2']);
 
      echo $form1.'<br>'.$form2;
-     
+          
 }

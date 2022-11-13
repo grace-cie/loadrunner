@@ -24,7 +24,7 @@
             
         </div>
         <div class="container-fluid d-flex">
-            <img src="../img/logo.PNG" style="height: 41px;" alt="">
+            <img src="./img/logo.PNG" style="height: 41px;" alt="">
             <span class="navbar-brand mb-0 h1 position-absolute" style="left: 65px;">Web Tours</span>
         </div>
     </nav>

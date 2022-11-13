@@ -9,7 +9,14 @@ session_start();
 // }
 
 include('../controller/flights_controller.php');
-// include('../controller/planes_controller.php');
+include('../controller/planes_controller.php');
+include_once('../controller/user_controller.php');
+ 
+$user = new User();
+ 
+//fetch user data
+$sql = "SELECT * FROM users WHERE id = '".$_SESSION['user']."'";
+$row = $user->details($sql);
 
 $flights = new Flights();
 
@@ -21,33 +28,49 @@ if(isset($_POST['steptwo'])){
      // $seatpref = $flights->escape_string($_POST['flexRadioDefaults']);
      $depdate = $flights->escape_string($_POST['date_dep']);
      $retdate = $flights->escape_string($_POST['date_return']);
-     // $isticket = $flights->escape_string($_POST['flexCheckDefault']);
-     // $tseat = $flights->escape_string($_POST['flexRadioDefault2']);
+     
+     $isticket = $flights->escape_string($_POST['isticket']);
+     $tseat = $flights->escape_string($_POST['typeseat']);
 
-     $res = $flights->check_flights($depc, $arrc, $depdate, $retdate);
+     echo $isticket = 'hello';
+     // echo $tseat;
 
-     if(!$res){
-          $_SESSION['message'] = 'The selected inputs has not been found in the database!';
+     if(empty($depc) || empty($arrc) || empty($retdate) || empty($tseat)){
+          $_SESSION['message1'] = 'Please select the required fields';
+
+          $_SESSION['depc'] = $depc;
+          $_SESSION['arrc'] = $arrc;
+
+          $_SESSION['depdate'] = $depdate;
+          $_SESSION['retdate'] = $retdate;
+
+          $_SESSION['isticket'] = $isticket;
+          $_SESSION['tseat'] = $tseat;
+
           header('location:./flights.php');
      } else {
-          $_SESSION['fmessage'] = 'Flights found! you may choose flights now';
 
-          // $planes = new Planes();
-          
-          // $plane_list = $planes->get_planes();
+          $res = $flights->check_flights($depc, $arrc, $depdate, $retdate);
 
-          // echo '<pre>';
-          //      print_r($plane_list);
+          $_SESSION['flights'] = $res;
 
-          //      // foreach($plane_list as $list){
-          //      //      echo $list['plane'];
-          //      //      echo $list['timee'];
-          //      //      echo $list['cost'];
-          //      // }
-          // echo '</pre>';
+          if(!$res){
+               $_SESSION['message'] = 'The selected inputs has not been found in the database!';
+               header('location:./flights.php');
+          } else {
+               $_SESSION['fmessage'] = 'Flights found! you may choose flights now';
 
-          // print_r($res);
+               $planes = new Planes();
+               
+               $plane_list_1 = $planes->get_planes_w_category_one();
+
+               $plane_list_2 = $planes->get_planes_w_category_two();
+               
+          }
+
      }
+
+     
           
      
 }else{
@@ -99,6 +122,7 @@ if(isset($_POST['steptwo'])){
             <img src="../img/logo.png" style="height: 41px;" alt="">
             <span class="navbar-brand mb-0 h1 position-absolute" style="left: 65px;">Web Tours</span>
         </div>
+        <h5 class="position-absolute" style="right: 33px;"><?php echo $row['fname']; ?></h5>
     </nav>
     <?php
 		    	if(isset($_SESSION['fmessage'])){
@@ -119,9 +143,7 @@ if(isset($_POST['steptwo'])){
             <br>
             <a href="./home.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Home</a>
             <br>
-            <a class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Sign off</a> 
-            <br>
-            <a href="../controller/logout_controller.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Logout</a>
+            <a href="../controller/logout_controller.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Sign off</a>
         </div>
     </nav>
     <div class="container" style="position: absolute;width: 1271px;background: #e9e2ec;height: 100%;right: 1px; padding-top: 116px; padding-left: 162px;">
@@ -141,80 +163,41 @@ if(isset($_POST['steptwo'])){
                          </tr>
                     </thead>
                     <tbody>
-                         
+                         <?php foreach($plane_list_1 as $list_1){ ?>
                               <tr>
                                    <td>
-                                        <label><input type="radio" id='regular' name="optradio" value="Blue_Sky_Air_780|8am|$801">Blue Sky Air 780</label>
+                                        <label><input type="radio" id='regular' name="optradio" value="<?php echo $list_1['id'].'|'.$list_1['plane'].'|'.$list_1['timee'].'|'.$list_1['cost']; ?>"><?php echo $list_1['plane']; ?></label>
                                    </td>
-                                   <td>8am</td>
-                                   <td>$801</td>
+                                   <td><?php echo $list_1['timee']; ?></td>
+                                   <td><?php echo $list_1['cost']; ?></td>
                               </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio" value="Blue_Sky_Air_781|1pm|$714">Blue Sky Air 781</label>
-                                   </td>
-                                   <td>1pm</td>
-                                   <td>$714</td>
-                              </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio" value="Blue_Sky_Air_782|5pm|$758">Blue Sky Air 782</label>
-                                   </td>
-                                   <td>5pm</td>
-                                   <td>$758</td>
-                              </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio" value="Blue_Sky_Air_783|11pm|$656">Blue Sky Air 783</label>
-                                   </td>
-                                   <td>11pm</td>
-                                   <td>$656</td>
-                              </tr>
-                         
+                         <?php } ?>
                     </tbody>
                </table>
-               <h4 class="mt-3">Flight departing from <strong><?php echo $res['too']; ?></strong> to <strong><?php echo $res['fromm']; ?></strong> on <strong><?php echo $res['arr_date']; ?></strong></h4>
-               <table>
-                    <thead>
-                         <tr>
-                              <th>Flight</th>
-                              <th>Departure time</th>
-                              <th>Cost</th>
-                         </tr>
-                    </thead>
-                    <tbody>
-                         
+               <div class="roundtrip" <?php if(isset($_SESSION['isticket'])){echo $_SESSION['isticket'] === 'isticket' ? null : 'hidden';}?> >
+               <h4 class="mt-3">Flight departing from <strong><?php echo $_SESSION['flights']['too']; ?></strong> to <strong><?php echo $res['fromm']; ?></strong> on <strong><?php echo $res['arr_date']; ?></strong></h4>
+                    <table>
+                         <thead>
                               <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio2" value="Blue_Sky_Air_870|8am|$801">Blue Sky Air 870</label>
-                                   </td>
-                                   <td>8am</td>
-                                   <td>$801</td>
+                                   <th>Flight</th>
+                                   <th>Departure time</th>
+                                   <th>Cost</th>
                               </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio2" value="Blue_Sky_Air_871|1pm|$714">Blue Sky Air 871</label>
-                                   </td>
-                                   <td>1pm</td>
-                                   <td>$714</td>
-                              </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio2" value="Blue_Sky_Air_872|5pm|$758">Blue Sky Air 872</label>
-                                   </td>
-                                   <td>5pm</td>
-                                   <td>$758</td>
-                              </tr>
-                              <tr>
-                                   <td>
-                                        <label><input type="radio" id='regular' name="optradio2" value="Blue_Sky_Air_873|11pm|$656">Blue Sky Air 873</label>
-                                   </td>
-                                   <td>11pm</td>
-                                   <td>$656</td>
-                              </tr>
-                         
-                    </tbody>
-               </table>
+                         </thead>
+                         <tbody>
+                              <?php foreach($plane_list_2 as $list_2){ ?>
+                                   <tr>
+                                        <td>
+                                             <label><input type="radio" id='regular' name="optradio2" value="<?php echo $list_2['id'].'|'.$list_2['plane'].'|'.$list_2['timee'].'|'.$list_2['cost']; ?>"><?php echo $list_2['plane']; ?>
+                                             </label>
+                                        </td>
+                                        <td><?php echo $list_2['timee']; ?></td>
+                                        <td><?php echo $list_2['cost']; ?></td>
+                                   </tr>
+                              <?php } ?>
+                         </tbody>
+                    </table>
+               </div>
                <input type="submit" name="stepthree" value="Continue">
           </form>
 
@@ -241,12 +224,12 @@ if(isset($_POST['steptwo'])){
     <script>
      $("#date_dep").flatpickr({
           altInput: true,
-          // altFormat: "F j, Y",
+          altFormat: "d/m/Y",
           dateFormat: "d/m/Y",
      });
      $("#date_return").flatpickr({
           altInput: true,
-          // altFormat: "F j, Y",
+          altFormat: "d/m/Y",
           dateFormat: "d/m/Y",
      });
     </script>

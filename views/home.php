@@ -33,6 +33,7 @@ $row = $user->details($sql);
             <img src="../img/logo.png" style="height: 41px;" alt="">
             <span class="navbar-brand mb-0 h1 position-absolute" style="left: 65px;">Web Tours</span>
         </div>
+        <h5 class="position-absolute" style="right: 33px;"><?php echo $row['fname']; ?></h5>
     </nav>
     <?php
 		    	if(isset($_SESSION['message'])){
@@ -53,9 +54,7 @@ $row = $user->details($sql);
             <br>
             <a class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Home</a>
             <br>
-            <a class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Sign off</a> 
-            <br>
-            <a href="../controller/logout_controller.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Logout</a>
+            <a href="../controller/logout_controller.php" class="btn btn-default mt-2" style="border: 1px solid; width: 90px;height: 30px;">Signoff</a>
         </div>
     </nav>
     <div class="container" style="position: absolute;width: 1100px;background: #e9e2ec;height: 100%;right: 1px;">
