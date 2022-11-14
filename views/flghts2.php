@@ -1,5 +1,5 @@
 <?php
-
+// error_reporting(0);
 session_start();
 
 //return to login if not logged in
@@ -32,8 +32,7 @@ if(isset($_POST['steptwo'])){
      $isticket = $flights->escape_string($_POST['isticket']);
      $tseat = $flights->escape_string($_POST['typeseat']);
 
-     echo $isticket = 'hello';
-     // echo $tseat;
+     
 
      if(empty($depc) || empty($arrc) || empty($retdate) || empty($tseat)){
           $_SESSION['message1'] = 'Please select the required fields';
@@ -50,9 +49,16 @@ if(isset($_POST['steptwo'])){
           header('location:./flights.php');
      } else {
 
-          $res = $flights->check_flights($depc, $arrc, $depdate, $retdate);
+          $res = $flights->check_flights($depc, $arrc, $depdate, $retdate, $isticket, $tseat);
+
+          $_SESSION['from'] = $res['fromm'];
+          $_SESSION['to'] = $res['too'];
+          $_SESSION['departure'] = $res['dep_date'];
+          $_SESSION['arrival'] = $res['arr_date'];
 
           $_SESSION['flights'] = $res;
+
+          $_SESSION['tseat'] = $tseat;
 
           if(!$res){
                $_SESSION['message'] = 'The selected inputs has not been found in the database!';
@@ -60,11 +66,15 @@ if(isset($_POST['steptwo'])){
           } else {
                $_SESSION['fmessage'] = 'Flights found! you may choose flights now';
 
+               $_SESSION['isticket'] = $isticket;
+
                $planes = new Planes();
                
                $plane_list_1 = $planes->get_planes_w_category_one();
 
                $plane_list_2 = $planes->get_planes_w_category_two();
+
+               //$_SESSION['plane_details'] = $plane_list_1;
                
           }
 
@@ -153,7 +163,7 @@ if(isset($_POST['steptwo'])){
                
           </form> -->
           <form action="./flights3.php" method="post">
-               <h4 class="mt-5">Flight departing from <strong><?php echo $res['fromm']; ?></strong> to <strong><?php echo $res['too']; ?></strong> on <strong><?php echo $res['dep_date']; ?></strong></h4>
+               <h4 class="mt-5">Flight departing from <strong><?php echo $_SESSION['from'] ; ?></strong> to <strong><?php echo $_SESSION['to']; ?></strong> on <strong><?php echo $_SESSION['departure']; ?></strong></h4>
                <table>
                     <thead>
                          <tr>
@@ -169,13 +179,14 @@ if(isset($_POST['steptwo'])){
                                         <label><input type="radio" id='regular' name="optradio" value="<?php echo $list_1['id'].'|'.$list_1['plane'].'|'.$list_1['timee'].'|'.$list_1['cost']; ?>"><?php echo $list_1['plane']; ?></label>
                                    </td>
                                    <td><?php echo $list_1['timee']; ?></td>
-                                   <td><?php echo $list_1['cost']; ?></td>
+                                   <td><?php echo '$'.$list_1['cost']; ?></td>
+                                   <?php $_SESSION['departure_time'] = $list_1['timee'] ?>
                               </tr>
                          <?php } ?>
                     </tbody>
                </table>
-               <div class="roundtrip" <?php if(isset($_SESSION['isticket'])){echo $_SESSION['isticket'] === 'isticket' ? null : 'hidden';}?> >
-               <h4 class="mt-3">Flight departing from <strong><?php echo $_SESSION['flights']['too']; ?></strong> to <strong><?php echo $res['fromm']; ?></strong> on <strong><?php echo $res['arr_date']; ?></strong></h4>
+               <div class="roundtrip" <?php echo empty($isticket) ? 'hidden' : null; ?> >
+               <h4 class="mt-3">Flight departing from <strong><?php echo $_SESSION['to']; ?></strong> to <strong><?php echo $_SESSION['from']; ?></strong> on <strong><?php echo $_SESSION['arrival']; ?></strong></h4>
                     <table>
                          <thead>
                               <tr>
@@ -192,7 +203,8 @@ if(isset($_POST['steptwo'])){
                                              </label>
                                         </td>
                                         <td><?php echo $list_2['timee']; ?></td>
-                                        <td><?php echo $list_2['cost']; ?></td>
+                                        <td><?php echo '$'.$list_2['cost']; ?></td>
+                                        <?php $_SESSION['arrival_time'] = $list_1['timee'] ?>
                                    </tr>
                               <?php } ?>
                          </tbody>

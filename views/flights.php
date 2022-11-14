@@ -171,7 +171,7 @@ $row = $user->details($sql);
                               </div>
                               <div class="form-group mt-3">
                                    <div class="form-check">
-                                   <input class="form-check-input" type="checkbox" name="isticket" value="isticket" id="flexCheckDefault" <?php if(isset($_SESSION['isticket'])){ echo $_SESSION['isticket'] === 'isticket' ? 'checked' : null;} ?> >
+                                        <input class="form-check-input" type="checkbox" name="isticket" value="isticket" id="flexCheckDefault" <?php if(isset($_SESSION['isticket'])){ echo $_SESSION['isticket'] === 'isticket' ? 'checked' : null;} ?> >
                                         <label class="form-check-label" for="flexCheckDefault">
                                              Roundtrip ticket
                                         </label>
@@ -180,7 +180,7 @@ $row = $user->details($sql);
                               <div class="form-group mt-3" required>
                                    <label for="form-check">Type Seat: </label>
                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="typeseat"id="flexRadioDefault2" value="First" <?php if(isset($_SESSION['tseat'])){ echo $_SESSION['tseat'] === 'First' ? 'checked' : null; } ?> >
+                                        <input class="form-check-input" type="radio" name="typeseat" id="flexRadioDefault2" value="First" <?php if(isset($_SESSION['tseat'])){ echo $_SESSION['tseat'] === 'First' ? 'checked' : null; } ?> >
                                         <label class="form-check-label" for="flexRadioDefault2">
                                              First
                                         </label>
